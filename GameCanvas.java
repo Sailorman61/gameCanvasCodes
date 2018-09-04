@@ -34,7 +34,7 @@ public class GameCanvas extends BaseCanvas {
     //Gemilerin birbirlerinin menziline girip girmediklerini ölçen değişken
     private int tetikleyici, dusman_tetikleyici;
 
-    private boolean tetiklendimi, dusman_tetiklendimi;
+    private boolean tetiklendimi, dusman_tetiklendimi, yoket;
 
 
     public GameCanvas(NgApp ngApp) {
@@ -61,6 +61,7 @@ public class GameCanvas extends BaseCanvas {
 
         tetiklendimi = false;
         dusman_tetiklendimi = false;
+        yoket = false;
 
         gemi_ates_hedefx = 0;
         gemi_ates_hedefy = 0;
@@ -71,6 +72,7 @@ public class GameCanvas extends BaseCanvas {
         gemi_ates_hizy = 30;
         dusman_gemi_ates_hizx = 30;
         dusman_gemi_ates_hizy = 30;
+
 
 
         arkaplan = Utils.loadImage(root, "map.png");
@@ -113,8 +115,12 @@ public class GameCanvas extends BaseCanvas {
         }
 
         if (tetiklendimi == true) {
-            gemi_atesx = gemi_atesx + gemi_ates_hizx;
-            gemi_atesy = gemi_atesy + gemi_ates_hizy;
+            gemi_atesx = gemi_atesx + gemi_ates_hizx + 18;
+            gemi_atesy = gemi_atesy + gemi_ates_hizy - 16;
+            if ((Math.abs(gemi_atesy - dusman_gemiy)) < 40) {
+                tetiklendimi = false;
+                yoket = true;
+            }
         }
 
         gemi_ates_hedefx = dusman_gemix;
@@ -129,8 +135,11 @@ public class GameCanvas extends BaseCanvas {
 
         canvas.drawBitmap(arkaplan, 0, 0, null);
         canvas.drawBitmap(gemi, gemix, gemiy, null);
-        canvas.drawBitmap(dusman_gemi, dusman_gemix, dusman_gemiy, null);
-        if (tetiklendimi) {
+        if (yoket == false) {
+            canvas.drawBitmap(dusman_gemi, dusman_gemix, dusman_gemiy, null);
+        }
+
+        if (tetiklendimi && yoket == false) {
             canvas.drawBitmap(gemi_ates, gemi_atesx, gemi_atesy, null);
         }
 

@@ -100,6 +100,7 @@ public class GameCanvas extends BaseCanvas {
         gemiOlustur(canvas);
         dusmanGemiOlustur(canvas);
         gemiAtesEtme(canvas);
+        dusmanGemiAtesEtme(canvas);
 
 
     }
@@ -111,7 +112,11 @@ public class GameCanvas extends BaseCanvas {
 
     //Gemiyi çizen method
     private void gemiOlustur(Canvas canvas) {
-        canvas.drawBitmap(gemi, gemix, gemiy, null);
+        if (gemi_yoket == false) {
+            canvas.drawBitmap(gemi, gemix, gemiy, null);
+        } else {
+            dusman_tetiklendimi = false;
+        }
     }
 
     //Düşman gemisini çizen method
@@ -132,7 +137,9 @@ public class GameCanvas extends BaseCanvas {
 
     //Düşman gemisinin ateşini çizen method
     private void dusmanGemiAtesEtme(Canvas canvas) {
-
+        if (dusman_tetiklendimi && gemi_yoket == false) {
+            canvas.drawBitmap(dusman_gemi_ates, dusman_gemi_atesx, dusman_gemi_atesy, null);
+        }
     }
 
     //Oyuncu gemisinin ilerleyişi
@@ -191,7 +198,7 @@ public class GameCanvas extends BaseCanvas {
         }
 
         if (dusman_tetiklendimi == true) {
-            dusman_gemi_atesy = dusman_gemi_atesy + dusman_gemi_ates_hizy;
+            dusman_gemi_atesy = dusman_gemi_atesy - dusman_gemi_ates_hizy;
 
             if ((Math.abs(dusman_gemi_atesy - gemiy)) < 40) {
                 dusman_tetiklendimi = false;

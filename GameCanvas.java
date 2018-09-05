@@ -50,7 +50,7 @@ public class GameCanvas extends BaseCanvas {
         gemi_hedefy = 1230;
         gemi_hizy = 10;
         //Düşman gemi parametreleri
-        dusman_gemix = 710;
+        dusman_gemix = 190;
         dusman_gemiy = 1270;
         dusman_gemi_hedefx = 710;
         dusman_gemi_hedefy = 200;
@@ -69,7 +69,7 @@ public class GameCanvas extends BaseCanvas {
         dusman_gemi_ates_hedefy = 0;
 
         gemi_ates_hizx = 30;
-        gemi_ates_hizy = 30;
+        gemi_ates_hizy = 15;
         dusman_gemi_ates_hizx = 30;
         dusman_gemi_ates_hizy = 30;
 
@@ -85,18 +85,69 @@ public class GameCanvas extends BaseCanvas {
     public void update() {
         Log.i(TAG, "update");
 
-        if (gemiy >= gemi_hedefy) {
+        gemiIlerletme();
+        dusmanGemiIlerletme();
+        menzilTesti();
+        atesUretme();
+    }
+
+    public void draw(Canvas canvas) {
+        Log.i(TAG, "draw");
+
+        arkaplanCizici(canvas);
+        gemiOlustur(canvas);
+        dusmanGemiOlustur(canvas);
+        gemiAtesEtme(canvas);
+
+
+    }
+
+    //Arkaplanı çizen method
+    private void arkaplanCizici(Canvas canvas) {
+        canvas.drawBitmap(arkaplan, 0, 0, null);
+    }
+
+    //Gemiyi çizen method
+    private void gemiOlustur(Canvas canvas) {
+        canvas.drawBitmap(gemi, gemix, gemiy, null);
+    }
+
+    //Düşman gemisini çizen method
+    private void dusmanGemiOlustur(Canvas canvas) {
+        if (yoket == false) {
+            canvas.drawBitmap(dusman_gemi, dusman_gemix, dusman_gemiy, null);
+        } else {
+            tetiklendimi = false;
+        }
+    }
+
+    //Oyuncu gemisinin ateşini çizen method
+    private void gemiAtesEtme(Canvas canvas) {
+        if (tetiklendimi && yoket == false) {
+            canvas.drawBitmap(gemi_ates, gemi_atesx, gemi_atesy, null);
+        }
+    }
+
+    //Oyuncu gemisinin ilerleyişi
+    private void gemiIlerletme() {
+        if ((gemiy >= gemi_hedefy) || (tetiklendimi == true)) {
             gemiy = gemiy + 0;
         } else {
             gemiy = gemiy + gemi_hizy;
         }
+    }
 
-        if (dusman_gemiy <= dusman_gemi_hedefy) {
-            dusman_gemiy = dusman_gemiy - 0;
+    //Düşman gemisinin ilerleyişi
+    private void dusmanGemiIlerletme() {
+        if ((dusman_gemiy <= dusman_gemi_hedefy) || (dusman_tetiklendimi == true)) {
+            //dusman_gemiy = dusman_gemiy - 0;
         } else {
             dusman_gemiy = dusman_gemiy - dusman_gemi_hizy;
         }
+    }
 
+    //İki gemi arasındaki mesafeyi ölçen method
+    private void menzilTesti() {
         tetikleyici = Math.abs(gemiy - dusman_gemiy);
         dusman_tetikleyici = Math.abs(dusman_gemiy - gemiy);
 
@@ -107,16 +158,20 @@ public class GameCanvas extends BaseCanvas {
         if (dusman_tetikleyici < 400) {
             dusman_tetiklendimi = true;
         }
+    }
 
+    //Ateş efektini üreten method
+    private void atesUretme() {
         //Ateş etme mekanizmasının başlangıcı
         if (tetiklendimi == false) {
-            gemi_atesx = gemix + 0;
+            gemi_atesx = gemix + 35;
             gemi_atesy = gemiy + 54;
         }
 
         if (tetiklendimi == true) {
-            gemi_atesx = gemi_atesx + gemi_ates_hizx + 18;
-            gemi_atesy = gemi_atesy + gemi_ates_hizy - 16;
+            //gemi_atesx = gemi_atesx;
+            gemi_atesy = gemi_atesy + gemi_ates_hizy;
+
             if ((Math.abs(gemi_atesy - dusman_gemiy)) < 40) {
                 tetiklendimi = false;
                 yoket = true;
@@ -125,25 +180,6 @@ public class GameCanvas extends BaseCanvas {
 
         gemi_ates_hedefx = dusman_gemix;
         gemi_ates_hedefy = dusman_gemiy;
-
-
-
-    }
-
-    public void draw(Canvas canvas) {
-        Log.i(TAG, "draw");
-
-        canvas.drawBitmap(arkaplan, 0, 0, null);
-        canvas.drawBitmap(gemi, gemix, gemiy, null);
-        if (yoket == false) {
-            canvas.drawBitmap(dusman_gemi, dusman_gemix, dusman_gemiy, null);
-        }
-
-        if (tetiklendimi && yoket == false) {
-            canvas.drawBitmap(gemi_ates, gemi_atesx, gemi_atesy, null);
-        }
-
-
     }
 
     public void keyPressed(int key) {

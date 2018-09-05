@@ -34,7 +34,8 @@ public class GameCanvas extends BaseCanvas {
     //Gemilerin birbirlerinin menziline girip girmediklerini ölçen değişken
     private int tetikleyici, dusman_tetikleyici;
 
-    private boolean tetiklendimi, dusman_tetiklendimi, yoket;
+    private boolean tetiklendimi, dusman_tetiklendimi,
+            dusman_gemi_yoket, gemi_yoket;
 
 
     public GameCanvas(NgApp ngApp) {
@@ -61,7 +62,8 @@ public class GameCanvas extends BaseCanvas {
 
         tetiklendimi = false;
         dusman_tetiklendimi = false;
-        yoket = false;
+        dusman_gemi_yoket = false;
+        gemi_yoket = false;
 
         gemi_ates_hedefx = 0;
         gemi_ates_hedefy = 0;
@@ -114,7 +116,7 @@ public class GameCanvas extends BaseCanvas {
 
     //Düşman gemisini çizen method
     private void dusmanGemiOlustur(Canvas canvas) {
-        if (yoket == false) {
+        if (dusman_gemi_yoket == false) {
             canvas.drawBitmap(dusman_gemi, dusman_gemix, dusman_gemiy, null);
         } else {
             tetiklendimi = false;
@@ -123,9 +125,14 @@ public class GameCanvas extends BaseCanvas {
 
     //Oyuncu gemisinin ateşini çizen method
     private void gemiAtesEtme(Canvas canvas) {
-        if (tetiklendimi && yoket == false) {
+        if (tetiklendimi && dusman_gemi_yoket == false) {
             canvas.drawBitmap(gemi_ates, gemi_atesx, gemi_atesy, null);
         }
+    }
+
+    //Düşman gemisinin ateşini çizen method
+    private void dusmanGemiAtesEtme(Canvas canvas) {
+
     }
 
     //Oyuncu gemisinin ilerleyişi
@@ -174,7 +181,21 @@ public class GameCanvas extends BaseCanvas {
 
             if ((Math.abs(gemi_atesy - dusman_gemiy)) < 40) {
                 tetiklendimi = false;
-                yoket = true;
+                dusman_gemi_yoket = true;
+            }
+        }
+
+        if (dusman_tetiklendimi == false) {
+            dusman_gemi_atesx = dusman_gemix - 5;
+            dusman_gemi_atesy = dusman_gemiy + 45;
+        }
+
+        if (dusman_tetiklendimi == true) {
+            dusman_gemi_atesy = dusman_gemi_atesy + dusman_gemi_ates_hizy;
+
+            if ((Math.abs(dusman_gemi_atesy - gemiy)) < 40) {
+                dusman_tetiklendimi = false;
+                gemi_yoket = true;
             }
         }
 

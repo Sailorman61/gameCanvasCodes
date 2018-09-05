@@ -34,6 +34,8 @@ public class GameCanvas extends BaseCanvas {
     //Gemilerin birbirlerinin menziline girip girmediklerini ölçen değişken
     private int tetikleyici, dusman_tetikleyici;
 
+    private int[] baslangicx, baslangicy, sinirx, siniry;
+
     private boolean tetiklendimi, dusman_tetiklendimi,
             dusman_gemi_yoket, gemi_yoket;
 
@@ -74,6 +76,14 @@ public class GameCanvas extends BaseCanvas {
         gemi_ates_hizy = 15;
         dusman_gemi_ates_hizx = 30;
         dusman_gemi_ates_hizy = 30;
+
+        //Üretileceği gemiyi seçen koordinatlar
+        baslangicx = new int[]{70, 325, 580, 835};
+        baslangicy = new int[]{1680, 1680, 1680, 1680};
+        sinirx = new int[]{300, 555, 810, 1065};
+        siniry = new int[]{1900, 1900, 1900, 1900};
+
+
 
 
 
@@ -245,7 +255,12 @@ public class GameCanvas extends BaseCanvas {
     }
 
     public void touchDown(int x, int y, int id) {
-        gemiUret();
+
+        if ((x > baslangicx[0]) && (y > baslangicy[0]) &&
+                (x < (sinirx[0])) && (y < siniry[0])) {
+            gemiUret();
+        }
+
     }
 
     public void touchMove(int x, int y, int id) {

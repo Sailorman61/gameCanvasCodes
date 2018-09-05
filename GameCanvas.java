@@ -110,6 +110,16 @@ public class GameCanvas extends BaseCanvas {
         canvas.drawBitmap(arkaplan, 0, 0, null);
     }
 
+    //Yeni gemi üreten method
+    private void gemiUret() {
+        gemi_yoket = false;
+        dusman_gemi_yoket = false;
+        gemix = 160;
+        gemiy = 180;
+        dusman_gemix = 190;
+        dusman_gemiy = 1270;
+    }
+
     //Gemiyi çizen method
     private void gemiOlustur(Canvas canvas) {
         if (gemi_yoket == false) {
@@ -193,8 +203,8 @@ public class GameCanvas extends BaseCanvas {
         }
 
         if (dusman_tetiklendimi == false) {
-            dusman_gemi_atesx = dusman_gemix - 5;
-            dusman_gemi_atesy = dusman_gemiy + 45;
+            dusman_gemi_atesx = dusman_gemix;
+            dusman_gemi_atesy = dusman_gemiy - 100;
         }
 
         if (dusman_tetiklendimi == true) {
@@ -235,7 +245,7 @@ public class GameCanvas extends BaseCanvas {
     }
 
     public void touchDown(int x, int y, int id) {
-
+        gemiUret();
     }
 
     public void touchMove(int x, int y, int id) {

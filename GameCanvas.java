@@ -29,7 +29,7 @@ public class GameCanvas extends BaseCanvas {
     private int dusman_gemix, dusman_gemiy, dusman_gemi_hedefx,
             dusman_gemi_hedefy, dusman_gemi_hizy;
     //Ateş efektinin x ve y koordinatları
-    private int gemi_atesx, gemi_atesy,
+    private int[] gemi_atesx, gemi_atesy,
             dusman_gemi_atesx, dusman_gemi_atesy;
     //Ateş efektinin hedeflerinin x ve y koordinatları
     private int gemi_ates_hedefx, gemi_ates_hedefy,
@@ -43,7 +43,7 @@ public class GameCanvas extends BaseCanvas {
     private int gemi_sec1;
     private int gecikme;
 
-    private boolean ates_edildimi[], dusman_ates_edildimi[],
+    private boolean[] ates_edildimi, dusman_ates_edildimi,
             dusman_gemi_yoket, gemi_yoket;
 
     private Vector<Vector<Integer>> oyuncu_gemileri;
@@ -69,8 +69,6 @@ public class GameCanvas extends BaseCanvas {
         dusman_gemi_hedefx = 710;
         dusman_gemi_hedefy = 200;
         dusman_gemi_hizy = 10;
-        tetikleyici = new int[10];
-        dusman_tetikleyici = new int[10];
         gemi_ates_hedefx = 0;
         gemi_ates_hedefy = 0;
         dusman_gemi_ates_hedefx = 0;
@@ -83,6 +81,12 @@ public class GameCanvas extends BaseCanvas {
         can = 10;
         guc = 2;
         gecikme = 0;
+        tetikleyici = new int[10];
+        dusman_tetikleyici = new int[10];
+        gemi_atesx = new int[10];
+        gemi_atesy = new int[10];
+        dusman_gemi_atesx = new int[10];
+        dusman_gemi_atesy = new int[10];
 
         //Üretileceği gemiyi seçen koordinatlar
         baslangicx = new int[]{70, 325, 580, 835};
@@ -92,8 +96,8 @@ public class GameCanvas extends BaseCanvas {
 
         ates_edildimi = new boolean[10];
         dusman_ates_edildimi = new boolean[10];
-        dusman_gemi_yoket = false;
-        gemi_yoket = false;
+        dusman_gemi_yoket = new boolean[10];
+        gemi_yoket = new boolean[10];
 
         arkaplan = Utils.loadImage(root, "map.png");
         gemi_resmi = new Bitmap[gemi_turu_adedi];
@@ -116,6 +120,7 @@ public class GameCanvas extends BaseCanvas {
 
         gemileriIlerlet();
         dusmanGemileriniIlerlet();
+
         if (gecikme > 50) {
             dusmanGemiUret((int)(Math.random() * 4));
             gecikme = 0;
@@ -125,7 +130,6 @@ public class GameCanvas extends BaseCanvas {
         if (!(oyuncu_gemileri.isEmpty() && dusman_gemileri.isEmpty()))
             menzilTestleriniYap();
         //atesEt();
-
     }
 
     public void draw(Canvas canvas) {
@@ -172,10 +176,7 @@ public class GameCanvas extends BaseCanvas {
             dusman_gemileri.add(dusman_yeni_gemi);
         }
     }
-/*
- + (((430 - oyuncu_gemileri.get(i).get(1)) - gemi_resmi[oyuncu_gemileri.get(i).get(2)].getHeight()) / 2)
 
-*/
     //Gemiyi çizen method
     private void gemileriCiz(Canvas canvas) {
         for (int i = 0; i < oyuncu_gemileri.size(); i++) {
@@ -213,14 +214,15 @@ public class GameCanvas extends BaseCanvas {
     }
 
     //Oyuncu gemisinin ateşini çizen method
-
-
     private void mermileriCiz(Canvas canvas) {
-     /*
-        if (ates_edildimi && dusman_gemi_yoket == false) {
-            canvas.drawBitmap(gemi_ates, gemi_atesx, gemi_atesy, null);
+        for (int i = 0; i < oyuncu_gemileri.size(); i++) {
+            for (int j = 0; j < dusman_gemileri.size(); j++) {
+                if (ates_edildimi[i] && dusman_gemi_yoket[j] == false) {
+                    canvas.drawBitmap(gemi_ates, gemi_atesx[i], gemi_atesy[i], null);
+                }
+            }
         }
-     */
+
     }
 
     //Düşman gemisinin ateşini çizen method
@@ -238,7 +240,6 @@ public class GameCanvas extends BaseCanvas {
             if ((oyuncu_gemileri.get(i).get(1) < gemi_hedefy) && (!ates_edildimi[i]))
                 oyuncu_gemileri.get(i).set(1, oyuncu_gemileri.get(i).get(1) + gemi_hizy);
         }
-
     }
 
     //Düşman gemisinin ilerleyişi
@@ -249,7 +250,6 @@ public class GameCanvas extends BaseCanvas {
                 dusman_gemileri.get(i).set(1, dusman_gemileri.get(i).get(1)
                         - dusman_gemi_hizy);
         }
-
     }
 
     //İki gemi_resmi arasındaki mesafeyi ölçen method
@@ -270,52 +270,50 @@ public class GameCanvas extends BaseCanvas {
                         dusman_ates_edildimi[j] = true;
                     }
                 }
-
             }
-
         }
-
     }
-
 
     //Ateş efektini üreten method
-    /*
     private void atesEt() {
-
         //Ateş etme mekanizmasının başlangıcı
-        if (ates_edildimi == false) {
-            gemi_atesx = gemix + 35;
-            gemi_atesy = gemiy + 54;
-        }
+        for (int i = 0; i < oyuncu_gemileri.size(); i++) {
+            for (int j = 0; j < dusman_gemileri.size(); j++) {
+                if (ates_edildimi[i] == false) {
+                    gemi_atesx[i] = oyuncu_gemileri.get(i).get(0) + 35;
+                    gemi_atesy[i] = oyuncu_gemileri.get(i).get(1) + 54;
+                }
 
-        if (ates_edildimi == true) {
-            //gemi_atesx = gemi_atesx;
-            gemi_atesy = gemi_atesy + gemi_ates_hizy;
+                if (ates_edildimi[i] == true) {
+                    //gemi_atesx = gemi_atesx;
+                    gemi_atesy[i] = gemi_atesy[i] + gemi_ates_hizy;
 
-            if ((Math.abs(gemi_atesy - dusman_gemiy)) < 40) {
-                ates_edildimi = false;
-                dusman_gemi_yoket = true;
+                    if ((Math.abs(gemi_atesy[i] - dusman_gemiy)) < 40) {
+                        ates_edildimi[i] = false;
+                        dusman_gemi_yoket[j] = true;
+                    }
+                }
+
+                if (dusman_ates_edildimi[j] == false) {
+                    dusman_gemi_atesx[j] = dusman_gemileri.get(j).get(0);
+                    dusman_gemi_atesy[j] = dusman_gemileri.get(j).get(1) - 100;
+                }
+
+                if (dusman_ates_edildimi[j] == true) {
+                    dusman_gemi_atesy[j] = dusman_gemi_atesy[j] - dusman_gemi_ates_hizy;
+
+                    if ((Math.abs(dusman_gemi_atesy[j] - oyuncu_gemileri.get(i).get(1))) < 40) {
+                        dusman_ates_edildimi[j] = false;
+                        gemi_yoket[i] = true;
+                    }
+                }
+
+                gemi_ates_hedefx = dusman_gemileri.get(j).get(0);
+                gemi_ates_hedefy = dusman_gemileri.get(j).get(1);
             }
         }
 
-        if (dusman_ates_edildimi == false) {
-            dusman_gemi_atesx = dusman_gemix;
-            dusman_gemi_atesy = dusman_gemiy - 100;
-        }
-
-        if (dusman_ates_edildimi == true) {
-            dusman_gemi_atesy = dusman_gemi_atesy - dusman_gemi_ates_hizy;
-
-            if ((Math.abs(dusman_gemi_atesy - gemiy)) < 40) {
-                dusman_ates_edildimi = false;
-                gemi_yoket = true;
-            }
-        }
-
-        gemi_ates_hedefx = dusman_gemix;
-        gemi_ates_hedefy = dusman_gemiy;
     }
-    */
 
     public void keyPressed(int key) {
 
@@ -357,7 +355,6 @@ public class GameCanvas extends BaseCanvas {
             }
         }
     }
-
 
     public void pause() {
 

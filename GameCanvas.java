@@ -53,13 +53,13 @@ public class GameCanvas extends BaseCanvas {
 
     public void setup() {
         Log.i(TAG, "setup");
-        //Oyuncu gemi_resmi parametreleri
+        //Oyuncu gemi resmi parametreleri
         gemix = 160;
         gemiy = 180;
         gemi_hedefx = 160;
         gemi_hedefy = 1230;
         gemi_hizy = 10;
-        //Düşman gemi_resmi parametreleri
+        //Düşman gemi resmi parametreleri
         dusman_gemix = 190;
         dusman_gemiy = 1270;
         dusman_gemi_hedefx = 710;
@@ -154,10 +154,13 @@ public class GameCanvas extends BaseCanvas {
         for (int i = 0; i < gemiler.size(); i++) {
             canvas.drawBitmap(
                     gemi_resmi[gemiler.get(i).get(2)],
-                    gemiler.get(i).get(0),
-                    gemiler.get(i).get(1),
+                    gemiler.get(i).get(0) + (((400 - gemiler.get(i).get(0))
+                            - gemi_resmi[gemiler.get(i).get(2)].getWidth()) / 2),
+                    gemiler.get(i).get(1) + (((430 - gemiler.get(i).get(1))
+                            - gemi_resmi[gemiler.get(i).get(2)].getHeight()) / 2),
                     null);
-        }
+        }           //Yukarıdaki 400 yazan yer geminin oluştuğu yerin x ekseninin sınırı.
+                    //Yukarıdaki 430 yazan yer geminin oluştuğu yerin y ekseninin sınırı.
         if (gemi_yoket == false) {
             canvas.drawBitmap(gemi_resmi[0], gemix, gemiy, null);
         } else {

@@ -184,7 +184,14 @@ public class GameCanvas extends BaseCanvas {
 
     //Düşman gemisini çizen method
     private void dusmanGemileriniCiz(Canvas canvas) {
-
+        for (int i = 0; i < dusman_gemileri.size(); i++) {
+            canvas.drawBitmap(gemi_resmi[dusman_gemileri.get(i).get(2)],
+                    dusman_gemileri.get(i).get(0)
+                            + (((370 - dusman_gemileri.get(i).get(0))
+                            - gemi_resmi[dusman_gemileri.get(i).get(2)].getWidth()) / 2),
+                    dusman_gemileri.get(i).get(1),
+                    null);
+        }
     }
 
     //Oyuncu gemisinin ateşini çizen method
@@ -306,8 +313,7 @@ public class GameCanvas extends BaseCanvas {
     public void touchUp(int x, int y, int id) {
         gemi_sec1 = (x - 70) / 255;
         gemiUret(gemi_sec1);
-        //gemi_sec1 = 2;
-        //dusmanGemiUret();
+        dusmanGemiUret(gemi_sec1);
     }
 
 

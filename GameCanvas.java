@@ -41,7 +41,7 @@ public class GameCanvas extends BaseCanvas {
 
     private int gemi_sec1;
 
-    private boolean ates_edildimi, dusman_tetiklendimi,
+    private boolean ates_edildimi, dusman_ates_edildimi,
             dusman_gemi_yoket, gemi_yoket;
 
     private Vector<Vector<Integer>> oyuncu_gemileri;
@@ -71,7 +71,7 @@ public class GameCanvas extends BaseCanvas {
         dusman_tetikleyici = 0;
 
         ates_edildimi = false;
-        dusman_tetiklendimi = false;
+        dusman_ates_edildimi = false;
         dusman_gemi_yoket = false;
         gemi_yoket = false;
 
@@ -203,7 +203,7 @@ public class GameCanvas extends BaseCanvas {
 
     //Düşman gemisinin ateşini çizen method
     private void dusmanMermileriniCiz(Canvas canvas) {
-        if (dusman_tetiklendimi && gemi_yoket == false) {
+        if (dusman_ates_edildimi && gemi_yoket == false) {
             canvas.drawBitmap(dusman_gemi_ates, dusman_gemi_atesx, dusman_gemi_atesy, null);
         }
     }
@@ -219,8 +219,13 @@ public class GameCanvas extends BaseCanvas {
 
     //Düşman gemisinin ilerleyişi
     private void dusmanGemileriniIlerlet() {
-        //if ((dusman_gemiy > dusman_gemi_hedefy) && (!dusman_tetiklendimi))
-        //    dusman_gemiy -= dusman_gemi_hizy;
+        for (int i = 0; i < dusman_gemileri.size(); i++) {
+            if ((dusman_gemileri.get(i).get(1) > dusman_gemi_hedefy)
+                    && (!dusman_ates_edildimi))
+                dusman_gemileri.get(i).set(1, dusman_gemileri.get(i).get(1)
+                        - dusman_gemi_hizy);
+        }
+
     }
 
     //İki gemi_resmi arasındaki mesafeyi ölçen method
@@ -234,7 +239,7 @@ public class GameCanvas extends BaseCanvas {
         }
 
         if (dusman_tetikleyici < 400) {
-            dusman_tetiklendimi = true;
+            dusman_ates_edildimi = true;
         }
     }
     */
@@ -259,16 +264,16 @@ public class GameCanvas extends BaseCanvas {
             }
         }
 
-        if (dusman_tetiklendimi == false) {
+        if (dusman_ates_edildimi == false) {
             dusman_gemi_atesx = dusman_gemix;
             dusman_gemi_atesy = dusman_gemiy - 100;
         }
 
-        if (dusman_tetiklendimi == true) {
+        if (dusman_ates_edildimi == true) {
             dusman_gemi_atesy = dusman_gemi_atesy - dusman_gemi_ates_hizy;
 
             if ((Math.abs(dusman_gemi_atesy - gemiy)) < 40) {
-                dusman_tetiklendimi = false;
+                dusman_ates_edildimi = false;
                 gemi_yoket = true;
             }
         }

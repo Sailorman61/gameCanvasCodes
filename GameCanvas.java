@@ -41,7 +41,7 @@ public class GameCanvas extends BaseCanvas {
 
     private int[] baslangicx, baslangicy, sinirx, siniry;
     private int gemi_sec1;
-    private int sayac;
+    private int gecikme;
 
     private boolean ates_edildimi, dusman_ates_edildimi,
             dusman_gemi_yoket, gemi_yoket;
@@ -95,7 +95,8 @@ public class GameCanvas extends BaseCanvas {
         gemi_sec1 = 0;
         can = 10;
         guc = 2;
-        sayac = 0;
+
+        gecikme = 0;
 
         arkaplan = Utils.loadImage(root, "map.png");
         gemi_resmi = new Bitmap[gemi_turu_adedi];
@@ -118,10 +119,15 @@ public class GameCanvas extends BaseCanvas {
 
         gemileriIlerlet();
         dusmanGemileriniIlerlet();
+        if (gecikme > 50) {
+            dusmanGemiUret((int)(Math.random() * 4));
+            gecikme = 0;
+        }
+        gecikme++;
+
         if (!(oyuncu_gemileri.isEmpty() && dusman_gemileri.isEmpty()))
             menzilTestleriniYap();
         //atesEt();
-        ++sayac;
 
     }
 
@@ -131,10 +137,7 @@ public class GameCanvas extends BaseCanvas {
         arkaplaniCiz(canvas);
         slotlariCiz(canvas);
         gemileriCiz(canvas);
-        if (sayac > 100) {
-            dusmanGemileriniCiz(canvas);
-            sayac = 0;
-        }
+        dusmanGemileriniCiz(canvas);
         mermileriCiz(canvas);
         dusmanMermileriniCiz(canvas);
 
@@ -252,18 +255,21 @@ public class GameCanvas extends BaseCanvas {
 
     //İki gemi_resmi arasındaki mesafeyi ölçen method
     private void menzilTestleriniYap() {
-        tetikleyici = Math.abs(oyuncu_gemileri.get(0).get(1)
-                - dusman_gemileri.get(0).get(1));
-        dusman_tetikleyici = Math.abs(dusman_gemileri.get(0).get(1)
-                - oyuncu_gemileri.get(0).get(1));
+        if ((!oyuncu_gemileri.isEmpty()) && (!dusman_gemileri.isEmpty())) {
+            tetikleyici = Math.abs(oyuncu_gemileri.get(0).get(1)
+                    - dusman_gemileri.get(0).get(1));
+            dusman_tetikleyici = Math.abs(dusman_gemileri.get(0).get(1)
+                    - oyuncu_gemileri.get(0).get(1));
 
-        if (tetikleyici < 400) {
-            ates_edildimi = true;
+            if (tetikleyici < 400) {
+                ates_edildimi = true;
+            }
+
+            if (dusman_tetikleyici < 400) {
+                dusman_ates_edildimi = true;
+            }
         }
 
-        if (dusman_tetikleyici < 400) {
-            dusman_ates_edildimi = true;
-        }
     }
 
 
@@ -342,7 +348,6 @@ public class GameCanvas extends BaseCanvas {
         if (y > 1679 && y < 1900) {
             gemi_sec1 = (x - 70) / 255;
             gemiUret(gemi_sec1);
-            dusmanGemiUret(gemi_sec1);
         }
     }
 
